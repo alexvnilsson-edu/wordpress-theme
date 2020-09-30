@@ -20,6 +20,11 @@
  */
 
 /**
+ * Node utilities.
+ */
+const path = require("path");
+
+/**
  * Load WPGulp Configuration.
  *
  * TODO: Customize your project in the wpgulp.js file.
@@ -109,6 +114,39 @@ gulp.task("clean-dest", () => {
 });
 
 /**
+ * Task: `copy-wordpress-manifest`
+ *
+ * @TODO
+ */
+gulp.task("copy-wordpress-manifest", () => {
+	return gulp
+		.src("package.json", { base: "." })
+		.pipe(gulp.dest(config.rootDestination));
+});
+
+/**
+ * Task: `copy-wordpress-php`
+ *
+ * Copies PHP files as structured under `src/`.
+ */
+gulp.task("copy-wordpress-php", () => {
+	return gulp
+		.src(config.phpSRC, { base: "./src" })
+		.pipe(gulp.dest(config.phpDestination));
+});
+
+/**
+ * Task: `copy-wordpress-root-assets`
+ *
+ * @TODO
+ */
+gulp.task("copy-wordpress-root-assets", () => {
+	return gulp
+		.src(["./src/screenshot.jpg"], { base: "./src" })
+		.pipe(gulp.dest(config.rootDestination));
+});
+
+/**
  * Task: `styles`.
  *
  * Compiles Sass, Autoprefixes it and Minifies CSS.
@@ -129,6 +167,7 @@ gulp.task("styles", () => {
 		.pipe(sourcemaps.init())
 		.pipe(
 			sass({
+				includePaths: ["node_modules"],
 				errLogToConsole: config.errLogToConsole,
 				outputStyle: config.outputStyle,
 				precision: config.precision,
@@ -149,10 +188,7 @@ gulp.task("styles", () => {
 		.pipe(lineec()) // Consistent Line Endings for non UNIX systems.
 		.pipe(gulp.dest(config.styleDestination))
 		.pipe(filter("**/*.css")) // Filtering stream to only css files.
-		.pipe(browserSync.stream()) // Reloads style.min.css if that is enqueued.
-		.pipe(
-			notify({ message: "\n\n✅  ===> STYLES — completed!\n", onLast: true })
-		);
+		.pipe(browserSync.stream()); // Reloads style.min.css if that is enqueued.
 });
 
 /**
@@ -292,24 +328,7 @@ gulp.task("customJS", () => {
 		)
 		.pipe(uglify())
 		.pipe(lineec()) // Consistent Line Endings for non UNIX systems.
-		.pipe(gulp.dest(config.jsCustomDestination))
-		.pipe(
-			notify({ message: "\n\n✅  ===> CUSTOM JS — completed!\n", onLast: true })
-		);
-});
-
-/**
- * Task: `copy-php`
- *
- * Copies PHP files as structured under `src/`.
- */
-gulp.task("copy-php", () => {
-	return gulp
-		.src(config.phpSRC)
-		.pipe(gulp.dest(config.phpDestination))
-		.pipe(
-			notify({ message: "\n\n✅  ===> Copy PHP - completed!\n", onLast: true })
-		);
+		.pipe(gulp.dest(config.jsCustomDestination));
 });
 
 /**
@@ -398,14 +417,16 @@ gulp.task(
 	"default",
 	gulp.parallel(
 		"clean-dest",
-		"copy-php",
+		"copy-wordpress-manifest",
+		"copy-wordpress-php",
+		"copy-wordpress-root-assets",
 		"styles",
 		"vendorsJS",
 		"customJS",
 		"images",
 		browsersync,
 		() => {
-			gulp.watch(config.watchPhp, reload); // Reload on PHP file changes.
+			gulp.watch(config.phpSRC, gulp.parallel("copy-wordpress-php", reload)); // Reload on PHP file changes.
 			gulp.watch(config.watchStyles, gulp.parallel("styles")); // Reload on SCSS file changes.
 			gulp.watch(config.watchJsVendor, gulp.series("vendorsJS", reload)); // Reload on vendorsJS file changes.
 			gulp.watch(config.watchJsCustom, gulp.series("customJS", reload)); // Reload on customJS file changes.

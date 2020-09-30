@@ -40,7 +40,7 @@ module.exports = {
 	jsCustomFile: "custom", // Compiled JS custom file name. Default set to custom i.e. custom.js.
 
 	// PHP options
-	phpSRC: ["./src/index.php", "./src/**/.php"],
+	phpSRC: ["./src/*.php", "./src/inc/**/*.php", "./src/**/*.php"],
 	phpDestination: wordpressThemePath,
 
 	// Images options.
