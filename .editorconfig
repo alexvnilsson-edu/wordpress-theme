@@ -16,3 +16,11 @@ indent_size = 2
 
 [{*.txt,wp-config-sample.php}]
 end_of_line = crlf
+
+[*.{css,scss,sass}]
+indent_style = space
+indent_size = 2
+
+[*.{js,ts,jsx,tsx}]
+indent_style = space
+indent_size = 2

@@ -53,14 +53,19 @@ module.exports = {
 	precision: 10,
 
 	// JS Vendor options.
-	jsVendorSRC: "./src/assets/js/vendor/*.js", // Path to JS vendor folder.
-	jsVendorDestination: "./src/assets/js/", // Path to place the compiled JS vendors file.
+	jsVendorSRC: "./src/assets/js/vendor/**/*.js", // Path to JS vendor folder.
+	jsVendorDestination: path.join(wordpressThemePath, "assets", "js"), // Path to place the compiled JS vendors file.
 	jsVendorFile: "vendor", // Compiled JS vendors file name. Default set to vendors i.e. vendors.js.
 
 	// JS Custom options.
-	jsCustomSRC: "./src/assets/js/custom/*.js", // Path to JS custom scripts folder.
-	jsCustomDestination: "./src/assets/js/", // Path to place the compiled JS custom scripts file.
+	jsCustomSRC: "./src/assets/js/custom/**/*.js", // Path to JS custom scripts folder.
+	jsCustomDestination: path.join(wordpressThemePath, "assets", "js"), // Path to place the compiled JS custom scripts file.
 	jsCustomFile: "custom", // Compiled JS custom file name. Default set to custom i.e. custom.js.
+
+	// JS Main options.
+	jsMainSRC: "./src/assets/js/main/**/*.js", // Path to JS main scripts folder.
+	jsMainDestination: path.join(wordpressThemePath, "assets", "js"), // Path to place the compiled JS main scripts file.
+	jsMainFile: "main", // Compiled JS main file name. Default set to main i.e. main.js.
 
 	// PHP options
 	phpSRC: ["./src/*.php", "./src/inc/**/*.php", "./src/**/*.php"],
@@ -71,9 +76,10 @@ module.exports = {
 	imgDST: "./src/assets/img/", // Destination folder of optimized images. Must be different from the imagesSRC folder.
 
 	// Watch files paths.
-	watchStyles: "./src/assets/css/**/*.scss", // Path to all *.scss files inside css folder and inside them.
+	watchStyles: "./src/**/*.scss", // Path to all *.scss files inside css folder and inside them.
 	watchJsVendor: "./src/assets/js/vendor/*.js", // Path to all vendor JS files.
 	watchJsCustom: "./src/assets/js/custom/*.js", // Path to all custom JS files.
+	watchJsMain: "./src/assets/js/main/*.js", // Path to all main JS files.
 	watchPhp: "./src/**/*.php", // Path to all PHP files.
 
 	// Translation options.

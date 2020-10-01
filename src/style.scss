@@ -1,0 +1,29 @@
+/*
+Theme Name: {{ template.name }}
+Text Domain: wordpress.edu.alexvnilsson.se
+Version: {{ template.version }}
+Requires at least: 4.7
+Requires PHP: 5.2.4
+Description: {{ template.description }}
+Author: {{ template.author.name }}
+Author URI: {{ template.author.url }}
+Theme URI: {{ template.metadata.url }}
+License: {{ template.license.name }}
+LicenseURI: {{ template.license.url }}
+
+{{ template.license.content }}
+*/
+
+// Bootstrap-related
+@import "assets/css/variables";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/root";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/grid";
+
+// Theme-related
+@import "assets/css/root";
+@import "assets/css/footer";
+@import "assets/css/navigation";

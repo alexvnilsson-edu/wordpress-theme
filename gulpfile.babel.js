@@ -156,6 +156,9 @@ gulp.task("copy-wordpress-style", () => {
 		.pipe(filter("**/*.css")) // Filtering stream to only css files.
 		.pipe(mmq({ log: true })) // Merge Media Queries only for .min.css version.
 		.pipe(browserSync.stream()) // Reloads style.css if that is enqueued.
+		.pipe(rename({ suffix: ".min" }))
+		.pipe(minifycss({ maxLineLen: 10 }))
+		.pipe(lineec()) // Consistent Line Endings for non UNIX systems.
 		.pipe(gulp.dest(config.rootDestination));
 });
 
@@ -319,7 +322,9 @@ gulp.task("vendorsJS", () => {
  */
 gulp.task("customJS", () => {
 	return gulp
-		.src(config.jsCustomSRC, { since: gulp.lastRun("customJS") }) // Only run on changed files.
+		.src(config.jsCustomSRC, {
+			since: gulp.lastRun("customJS"),
+		}) // Only run on changed files.
 		.pipe(plumber(errorHandler))
 		.pipe(
 			babel({
@@ -346,6 +351,50 @@ gulp.task("customJS", () => {
 		.pipe(uglify())
 		.pipe(lineec()) // Consistent Line Endings for non UNIX systems.
 		.pipe(gulp.dest(config.jsCustomDestination));
+});
+
+/**
+ * Task: `customJS`.
+ *
+ * Concatenate and uglify custom JS scripts.
+ *
+ * This task does the following:
+ *     1. Gets the source folder for JS custom files
+ *     2. Concatenates all the files and generates custom.js
+ *     3. Renames the JS file with suffix .min.js
+ *     4. Uglifes/Minifies the JS file and generates custom.min.js
+ */
+gulp.task("mainJS", () => {
+	return gulp
+		.src(config.jsMainSRC, {
+			since: gulp.lastRun("mainJS"),
+		}) // Only run on changed files.
+		.pipe(plumber(errorHandler))
+		.pipe(
+			babel({
+				presets: [
+					[
+						"@babel/preset-env", // Preset to compile your modern JS to ES5.
+						{
+							targets: { browsers: config.BROWSERS_LIST }, // Target browser list to support.
+						},
+					],
+				],
+			})
+		)
+		.pipe(remember(config.jsMainSRC)) // Bring all files back to stream.
+		.pipe(concat(config.jsMainFile + ".js"))
+		.pipe(lineec()) // Consistent Line Endings for non UNIX systems.
+		.pipe(gulp.dest(config.jsMainDestination))
+		.pipe(
+			rename({
+				basename: config.jsMainFile,
+				suffix: ".min",
+			})
+		)
+		.pipe(uglify())
+		.pipe(lineec()) // Consistent Line Endings for non UNIX systems.
+		.pipe(gulp.dest(config.jsMainDestination));
 });
 
 /**
@@ -440,6 +489,7 @@ gulp.task(
 		"styles",
 		"vendorsJS",
 		"customJS",
+		"mainJS",
 		"images",
 		browsersync,
 		() => {
@@ -450,6 +500,7 @@ gulp.task(
 			); // Reload on SCSS file changes.
 			gulp.watch(config.watchJsVendor, gulp.series("vendorsJS", reload)); // Reload on vendorsJS file changes.
 			gulp.watch(config.watchJsCustom, gulp.series("customJS", reload)); // Reload on customJS file changes.
+			gulp.watch(config.watchJsMain, gulp.series("mainJS", reload)); // Reload on mainJS file changes.
 			gulp.watch(config.imgSRC, gulp.series("images", reload)); // Reload on customJS file changes.
 		}
 	)
