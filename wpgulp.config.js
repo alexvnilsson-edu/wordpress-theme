@@ -8,6 +8,9 @@
  */
 
 const path = require("path");
+const fs = require("fs");
+
+const manifest = require("./package.json");
 
 const wordpressThemePath = "/var/www/wordpress/wp-content/themes/alexvnilsson";
 
@@ -22,9 +25,29 @@ module.exports = {
 	rootDestination: wordpressThemePath,
 	rootDestinationCleanGlobs: [path.join(wordpressThemePath, "**", "*")],
 
+	// Template
+	templateVariables: {
+		template: {
+			...manifest.wordpressTemplate,
+			name: manifest.name,
+			description: manifest.description,
+			version: manifest.version,
+			license: {
+				name: manifest.license,
+				...manifest.wordpressTemplate.license,
+				content: fs.readFileSync(path.join(__dirname, "LICENSE")),
+			},
+			author: {
+				name: manifest.author,
+				...manifest.wordpressTemplate.author,
+			},
+		},
+		templateVersion: manifest.version,
+	},
 	// Style options.
 	styleSRC: "./src/assets/css/style.scss", // Path to main .scss file.
-	styleDestination: wordpressThemePath, // Path to place the compiled CSS file. Default set to root folder.
+	stylesSRC: ["./src/assets/css/*.scss", "./src/assets/css/**/*.scss"],
+	styleDestination: path.join(wordpressThemePath, "assets", "css"), // Path to place the compiled CSS file. Default set to root folder.
 	outputStyle: "compact", // Available options → 'compact' or 'compressed' or 'nested' or 'expanded'
 	errLogToConsole: true,
 	precision: 10,
@@ -57,8 +80,8 @@ module.exports = {
 	textDomain: "edu.alexvnilsson.se", // Your textdomain here.
 	translationFile: "WPGULP.pot", // Name of the translation file.
 	translationDestination: "./languages", // Where to save the translation files.
-	packageName: "alexvnilsson", // Package name.
-	bugReport: "https://edu.alexvnilsson.se/bug", // Where can users report bugs.
+	packageName: manifest.name, // Package name.
+	bugReport: manifest.bugs.url, // Where can users report bugs.
 	lastTranslator: "Ahmad Awais <your_email@email.com>", // Last translator Email ID.
 	team: "AhmadAwais <your_email@email.com>", // Team's Email ID.
 
