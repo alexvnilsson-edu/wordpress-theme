@@ -20,7 +20,7 @@ class NavigationMenu
         //     return false;
         // }
         $menu = wp_get_nav_menu_object($menu_name);
-        // Log::getLogger()->info(var_dump($menu));
+        // Log::getLogger()->info(var_dump(get_registered_nav_menus()));
         $menuItems = Header::get_nav_menu_items($menu->term_id); ?>
 <div class="nav-wrapper">
     <?php if ($menuItems && !empty($menuItems)): ?>

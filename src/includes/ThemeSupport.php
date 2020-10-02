@@ -7,17 +7,18 @@
  */
 namespace AlexVNilsson\WordPressTheme;
 
-add_action('after_setup_theme', array( 'ThemeSupport', 'initialize' ));
-add_action('wp_head', array( 'ThemeSupport', 'admin_toolbar_relocate' ));
+use AlexVNilsson\WordPressTheme\Core\Log;
 
 class ThemeSupport
 {
-    public static function initialize()
+    public function __construct()
     {
-        self::register_theme_support();
+        add_action('after_setup_theme', [ $this, 'after_setup_theme' ]);
+        add_action('wp_head', [$this, 'admin_toolbar_relocate']);
+        $this->register_theme_support();
     }
 
-    public static function register_theme_support()
+    public function register_theme_support()
     {
         $options = get_option('post_formats');
         $formats = array('aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat');
@@ -34,13 +35,15 @@ class ThemeSupport
         add_theme_support('html5', array('comment-list', 'comment-form', 'search-form', 'gallery', 'caption'));
     }
 
-    public static function after_setup_theme()
+    public function after_setup_theme()
     {
-        self::register_custom_logo();
-        self::register_navigation_menus();
+        Log::getLogger()->info("after_setup_theme called in ThemeSupport.");
+
+        $this->register_custom_logo();
+        $this->register_navigation_menus();
     }
 
-    protected static function register_custom_logo()
+    public function register_custom_logo()
     {
         $defaults = array(
             'height'      => 44,
@@ -54,7 +57,7 @@ class ThemeSupport
         add_theme_support('custom-logo', $defaults);
     }
 
-    protected static function register_navigation_menus()
+    public function register_navigation_menus()
     {
         register_nav_menus(
             array(
@@ -64,7 +67,7 @@ class ThemeSupport
         );
     }
 
-    public static function admin_toolbar_relocate()
+    public function admin_toolbar_relocate()
     {
         echo '
 		<style type="text/css">
@@ -76,3 +79,5 @@ class ThemeSupport
 		</style>';
     }
 }
+
+$themeSupport = new ThemeSupport();
