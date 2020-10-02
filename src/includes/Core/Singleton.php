@@ -1,14 +1,9 @@
 <?php
 namespace AlexVNilsson\WordPressTheme\Core;
 
-interface SingletonInterface
-{
-    public static function configure();
-}
-
 class Singleton
 {
-    protected static $instance;
+    protected static $instance = null;
 
     public static function getInstance()
     {
@@ -19,10 +14,10 @@ class Singleton
         return self::$instance;
     }
 
-    protected static function setInstance($instance)
+    public static function setInstance($instance)
     {
-        self::$instance = $instance;
-
-        return self::$instance;
+        if (!self::$instance) {
+            self::$instance = $instance;
+        }
     }
 }
