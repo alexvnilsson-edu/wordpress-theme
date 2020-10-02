@@ -14,19 +14,19 @@ class NavigationMenu
 {
     public static function render_nav_menu($menu_name)
     {
-        // $locations = get_nav_menu_locations();
-        // if (!array_key_exists($menu_name, $locations)) {
-        //     Log::getLogger()->error("Hittar ingen meny med namnet \"{$menu_name}\".");
-        //     return false;
-        // }
-        $menu = wp_get_nav_menu_object($menu_name);
-        // Log::getLogger()->info(var_dump(get_registered_nav_menus()));
-        $menuItems = Header::get_nav_menu_items($menu->term_id); ?>
+        $log = Log::getLogger();
+
+        $locations = get_nav_menu_locations();
+        $log->notice(json_encode($locations));
+        if (!array_key_exists($menu_name, $locations)) {
+            return false;
+        }
+        $menu_items = Header::get_nav_menu_items($locations[$menu_name]); ?>
 <div class="nav-wrapper">
-    <?php if ($menuItems && !empty($menuItems)): ?>
+    <?php if ($menu_items && !empty($menu_items)): ?>
     <ul class="nav">
-        <?php foreach ($menuItems as $item): ?>
-        <?php $hasDescendants = (count($item->children) > 0); ?>
+        <?php foreach ($menu_items as $item): ?>
+        <?php $hasDescendants = ($item->children && count($item->children) > 0); ?>
 
         <li class="item">
             <a href="<?php echo $item->url; ?>" class="link">

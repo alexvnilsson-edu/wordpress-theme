@@ -49,7 +49,7 @@ use AlexVNilsson\WordPressTheme\Module\NavigationMenu;
             <span class="name"><?php bloginfo('name'); ?></span>
         </a>
 
-        <?php NavigationMenu::render_nav_menu('primary'); ?>
+        <?php NavigationMenu::render_nav_menu('header'); ?>
     </nav>
 
     <div id="content" class="container">

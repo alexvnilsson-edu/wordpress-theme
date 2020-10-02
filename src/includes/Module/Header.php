@@ -35,22 +35,21 @@ class Header
         return $logo;
     }
 
-    public static function get_nav_menu_items(string $menu, array $args = array())
+    public static function get_nav_menu_items($menu_id, array $args = array())
     {
         $menu = array();
-        $subMenu = array();
-        $menuItems = wp_get_nav_menu_items($menu, $args);
+        $menu_items = wp_get_nav_menu_items($menu_id, array_merge(array(), $args));
 
-        if (!empty($menuItems)) {
-            foreach ($menuItems as $item) {
-                if (empty($item->menu_item_parent)) {
-                    $menu[intval($item->ID)] = new Menu_Item($item->ID, $item->title, $item->url, array());
+        if (!empty($menu_items)) {
+            foreach ($menu_items as $item) {
+                if (intval($item->menu_item_parent) == 0) {
+                    $menu[$item->ID] = new Menu_Item($item->ID, $item->title, $item->url, array());
                 }
             }
 
-            foreach ($menuItems as $item) {
+            foreach ($menu_items as $item) {
                 if ($item->menu_item_parent) {
-                    $menu[intval($item->menu_item_parent)]->children[intval($item->ID)] = new Menu_Item($item->ID, $item->title, $item->url);
+                    $menu[$item->menu_item_parent]->children[$item->ID] = new Menu_Item($item->ID, $item->title, $item->url);
                 }
             }
         }
