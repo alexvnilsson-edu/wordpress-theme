@@ -12,7 +12,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "gulp",
+    "start": "gulp gulp-autoreload",
     "styles": "gulp styles",
     "stylesRTL": "gulp stylesRTL",
     "vendorsJS": "gulp vendorsJS",
@@ -49,6 +49,7 @@
     "gulp-rename": "^1.2.0",
     "gulp-rtlcss": "^1.2.0",
     "gulp-sass": "^4.0.1",
+    "gulp-shell": "^0.8.0",
     "gulp-sort": "^2.0.0",
     "gulp-sourcemaps": "^2.6.2",
     "gulp-template": "^5.0.0",
@@ -59,6 +60,12 @@
     "prettier": "2.1.2"
   },
   "wordpressTemplate": {
+    "engine": {
+      "php": {
+        "minimum": "5.3",
+        "required": "5.5.1"
+      }
+    },
     "metadata": {
       "url": "https://edu.alexvnilsson.se/development/wordpress/themes/alexvnilsson"
     },
