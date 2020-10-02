@@ -13,8 +13,8 @@ const nav = {
   init() {
     console.log("[Navigation] Init.");
 
-    document.querySelectorAll("ul.children").forEach(e => {
-      const pageItem = e.closest("li.page_item_has_children");
+    document.querySelectorAll("ul.nav-descendants").forEach(e => {
+      const pageItem = e.closest("li.parent");
 
       pageItem.addEventListener("mouseover", () => this.onMouseOver(pageItem));
       pageItem.addEventListener("mouseleave", () => this.onMouseLeave(pageItem));
@@ -27,33 +27,11 @@ const nav = {
    * @param {Element} pageItem
    */
   setExpanded(pageItem) {
-    anime.remove(pageItem);
-
     if (!pageItem.classList.contains(opts.class.expanded)) {
       // const animationId = new Date().getTime();
 
       pageItem.classList.add(opts.class.expanded);
       this.cancelPendingCollapse(pageItem);
-
-      this.animations[pageItem] = anime({
-        targets: pageItem.querySelector("ul.children"),
-        opacity: "0",
-        keyframes: [
-          { opacity: 0, scaleX: 0, scaleY: 0, translateX: "100%", translateY: "-100%" },
-          {
-            opacity: 1,
-            scaleX: 1,
-            scaleY: 1,
-            translateX: "0%",
-            translateY: "0%",
-          },
-        ],
-        duration: 300,
-        easing: "easeInOutQuad",
-        complete: animation => {
-          animation.pause();
-        },
-      });
     }
   },
 
@@ -63,22 +41,9 @@ const nav = {
    * @param {Element} pageItem
    */
   setCollapsed(pageItem) {
-    anime.remove(pageItem);
-
     if (pageItem.classList.contains(opts.class.expanded)) {
       pageItem.classList.remove(opts.class.expanded);
       pageItem.removeAttribute(opts.attribute.isPendingCollapse);
-
-      anime({
-        targets: pageItem.querySelector("ul.children"),
-        opacity: "1",
-        keyframes: [{ opacity: 1 }, { opacity: 0 }],
-        duration: 500,
-        easing: "easeInOutQuad",
-        complete: animation => {
-          animation.pause();
-        },
-      });
     }
   },
 

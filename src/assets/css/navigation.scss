@@ -78,11 +78,11 @@ $nav-page-item-normal-animation: 250ms;
             }
           }
 
-          &.page_item_has_children {
-            &:not(.expanded) > ul.children {
+          &.parent {
+            &:not(.expanded) > ul.nav-descendants {
               display: none;
             }
-            &.expanded > ul.children {
+            &.expanded > ul.nav-descendants {
               display: block;
             }
 
@@ -97,9 +97,8 @@ $nav-page-item-normal-animation: 250ms;
               border-radius: 0.16em 0.16em 0 0;
             }
 
-            & > ul.children {
+            & > ul.nav-descendants {
               display: none;
-              opacity: 0;
               position: absolute;
               top: 100%;
               right: 0;
@@ -108,7 +107,7 @@ $nav-page-item-normal-animation: 250ms;
 
               background-color: rgb(255, 255, 255);
 
-              & > li.page_item a {
+              & > li.item a {
                 min-width: 6em;
                 margin: 0 auto;
                 padding: 0.32em 1.28em;

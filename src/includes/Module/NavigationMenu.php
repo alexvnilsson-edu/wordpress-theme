@@ -28,7 +28,7 @@ class NavigationMenu
         <?php foreach ($menu_items as $item): ?>
         <?php $hasDescendants = ($item->children && count($item->children) > 0); ?>
 
-        <li class="item">
+        <li class="<?php echo join(' ', array('item', $hasDescendants ? 'parent' : '')) ?>">
             <a href="<?php echo $item->url; ?>" class="link">
                 <span><?php echo $item->title; ?></span>
                 <?php if ($hasDescendants): ?>
