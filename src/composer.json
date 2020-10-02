@@ -1,0 +1,26 @@
+{
+    "repositories": [
+        {
+            "type": "composer",
+            "url" : "https://wpackagist.org"
+        }
+    ],
+    "require": {
+        "wpackagist-plugin/wp-super-cache": "1.6.*",
+        "wpackagist-plugin/bbpress": "2.5.*",
+		"monolog/monolog": "^2.1"
+    },
+    "extra": {
+        "installer-paths": {
+            "content/plugins/{$name}/": ["type:wordpress-plugin"],
+            "content/themes/{$name}/": ["type:wordpress-theme"]
+        }
+	},
+	"autoload": {
+        "psr-4": {
+			"AlexVNilsson\\WordPressTheme\\": "./inc/classes",
+			"AlexVNilsson\\WordPressTheme\\Core\\": "./inc/classes/Core",
+			"AlexVNilsson\\WordPressTheme\\Module\\": "./inc/classes/Module"
+        }
+    }
+}
