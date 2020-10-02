@@ -11,7 +11,6 @@ require_once(THEME_PATH ."/includes/Module/NavigationMenu.php");
 
 use AlexVNilsson\WordPressTheme\Module\Header;
 use AlexVNilsson\WordPressTheme\Module\NavigationMenu;
-use AlexVNilsson\WordPressTheme\Core\Log;
 
 ?>
 
