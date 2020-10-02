@@ -1,9 +1,9 @@
 <?php
 namespace AlexVNilsson\WordPressTheme\Core;
 
+use AlexVNilsson\WordPressTheme\Core\Singleton;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use AlexVNilsson\WordPressTheme\Core\Singleton;
 use Monolog\Formatter\LineFormatter;
 
 class Log extends Singleton

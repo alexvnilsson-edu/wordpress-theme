@@ -5,11 +5,19 @@
  * @package {{ template.name }}
  * @version {{ templateVersion }}
  */
-namespace AlexVNilsson\WordPressTheme;
-
 define('PLUGIN_PATH', get_template_directory());
+define('THEME_PATH', PLUGIN_PATH);
 
-require PLUGIN_PATH . '/vendor/autoload.php';
-require PLUGIN_PATH . '/autoload.php';
-require PLUGIN_PATH . '/inc/cleanup.php';
-require PLUGIN_PATH . '/inc/enqueue.php';
+require_once(THEME_PATH . "/includes/Enqueue.php");
+require_once(THEME_PATH . "/includes/ThemeSupport.php");
+
+use AlexVNilsson\WordPressTheme\Enqueue;
+use AlexVNilsson\WordPressTheme\ThemeSupport;
+
+Enqueue::initialize();
+ThemeSupport::initialize();
+
+
+
+// require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/autoload.php';

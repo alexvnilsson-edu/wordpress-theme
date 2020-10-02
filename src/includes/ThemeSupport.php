@@ -7,18 +7,18 @@
  */
 namespace AlexVNilsson\WordPressTheme;
 
-use AlexVNilsson\WordPressTheme\Core\Log;
+ThemeSupport::initialize();
 
 class ThemeSupport
 {
-    public function __construct()
+    public static function initialize()
     {
-        add_action('after_setup_theme', [ $this, 'after_setup_theme' ]);
-        add_action('wp_head', [$this, 'admin_toolbar_relocate']);
-        $this->register_theme_support();
+        add_action('after_setup_theme', array(__CLASS__, 'after_setup_theme'));
+        // add_action('wp_head', array(__CLASS__, 'admin_toolbar_relocate'));
+        self::register_theme_support();
     }
 
-    public function register_theme_support()
+    public static function register_theme_support()
     {
         $options = get_option('post_formats');
         $formats = array('aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat');
@@ -35,15 +35,13 @@ class ThemeSupport
         add_theme_support('html5', array('comment-list', 'comment-form', 'search-form', 'gallery', 'caption'));
     }
 
-    public function after_setup_theme()
+    public static function after_setup_theme()
     {
-        Log::getLogger()->info("after_setup_theme called in ThemeSupport.");
-
-        $this->register_custom_logo();
-        $this->register_navigation_menus();
+        self::register_custom_logo();
+        self::register_navigation_menus();
     }
 
-    public function register_custom_logo()
+    public static function register_custom_logo()
     {
         $defaults = array(
             'height'      => 44,
@@ -57,17 +55,17 @@ class ThemeSupport
         add_theme_support('custom-logo', $defaults);
     }
 
-    public function register_navigation_menus()
+    public static function register_navigation_menus()
     {
         register_nav_menus(
             array(
-                'primary' => __('Header Navigation Menu'),
+                'header' => __('Header Navigation Menu'),
                 'footer' => __('Footer Menu')
             )
         );
     }
 
-    public function admin_toolbar_relocate()
+    public static function admin_toolbar_relocate()
     {
         echo '
 		<style type="text/css">
@@ -79,5 +77,3 @@ class ThemeSupport
 		</style>';
     }
 }
-
-$themeSupport = new ThemeSupport();

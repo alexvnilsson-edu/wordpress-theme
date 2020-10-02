@@ -5,10 +5,13 @@
  * @package {{ template.name }}
  * @version {{ templateVersion }}
  */
-namespace AlexVNilsson\WordPressTheme;
+
+require_once(THEME_PATH . "/includes/Module/Header.php");
+require_once(THEME_PATH ."/includes/Module/NavigationMenu.php");
 
 use AlexVNilsson\WordPressTheme\Module\Header;
 use AlexVNilsson\WordPressTheme\Module\NavigationMenu;
+use AlexVNilsson\WordPressTheme\Core\Log;
 
 ?>
 
@@ -34,6 +37,7 @@ use AlexVNilsson\WordPressTheme\Module\NavigationMenu;
 
 <?php
     $logo = Header::get_custom_logo_url();
+    //$logo = null; //Header::get_custom_logo_url();
 ?>
 
 <body <?php body_class() ?>>

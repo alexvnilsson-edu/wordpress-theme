@@ -11,9 +11,9 @@ class Cleanup
 {
     public function __construct()
     {
-        add_filter('script_loader_src', 'startertheme_remove_wp_version_strings');
-        add_filter('style_loader_src', 'startertheme_remove_wp_version_strings');
-        add_filter('the_generator', 'startertheme_remove_meta_version');
+        add_filter('script_loader_src', array( $this, 'strip_wp_version_strings'));
+        add_filter('style_loader_src', array( $this, 'strip_wp_version_strings'));
+        add_filter('the_generator', array( $this, 'strip_meta_version'));
     }
 
     // Remove version string from js and css
