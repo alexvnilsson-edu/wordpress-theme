@@ -13,11 +13,3 @@ LicenseURI: {{ template.license.url }}
 
 {{ template.license.content }}
 */
-
-// Bootstrap-related
-@import "assets/css/vendor/bootstrap";
-
-// Theme-related
-@import "assets/css/root";
-@import "assets/css/footer";
-@import "assets/css/navigation";
