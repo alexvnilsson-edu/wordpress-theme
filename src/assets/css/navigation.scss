@@ -31,11 +31,13 @@ $nav-page-item-normal-animation: 250ms;
     }
 
     div.nav-wrapper {
+      margin-left: auto;
       ul.nav {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
         padding-left: 0;
+
         margin-bottom: 0;
         list-style: none;
 
@@ -48,6 +50,11 @@ $nav-page-item-normal-animation: 250ms;
             margin-right: 1.66em;
           }
 
+          &:hover > a.link, &:focus > a.link {
+            text-decoration: none;
+            color: $nav-page-item-link-active-color;
+          }
+
           a.link {
             display: flex;
             padding: 0.24em 0.48em;
@@ -57,11 +64,6 @@ $nav-page-item-normal-animation: 250ms;
             color: $nav-page-item-link-color;
 
             transition: color 250ms ease-in-out;
-
-            &:hover, &:focus {
-              text-decoration: none;
-              color: $nav-page-item-link-active-color;
-            }
 
             i.icon {
               margin-left: auto;
