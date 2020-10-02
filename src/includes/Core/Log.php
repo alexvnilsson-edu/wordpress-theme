@@ -40,7 +40,7 @@ class Log extends Singleton
      */
     public static function log($level, $message, array $context = [])
     {
-        self::getLogger()->log($message, $context);
+        self::getLogger()->log($level, $message, $context);
     }
 
     /**
