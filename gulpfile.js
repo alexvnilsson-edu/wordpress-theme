@@ -155,18 +155,10 @@ gulp.task("copy-wordpress-style", () => {
         errLogToConsole: config.errLogToConsole,
         outputStyle: config.outputStyle,
         precision: config.precision,
-      })
+      }).on("error", sass.logError)
     )
-    .on("error", sass.logError)
     .pipe(autoprefixer(config.BROWSERS_LIST))
     .pipe(lineec())
-    .pipe(gulp.dest(config.rootDestination))
-    .pipe(filter("**/*.css")) // Filtering stream to only css files.
-    .pipe(mmq({ log: false })) // Merge Media Queries only for .min.css version.
-    .pipe(browserSync.stream()) // Reloads style.css if that is enqueued.
-    .pipe(rename({ suffix: ".min" }))
-    .pipe(minifycss({ maxLineLen: 10 }))
-    .pipe(lineec()) // Consistent Line Endings for non UNIX systems.
     .pipe(gulp.dest(config.rootDestination));
 });
 
@@ -235,7 +227,6 @@ gulp.task("styles", () => {
     .pipe(autoprefixer(config.BROWSERS_LIST))
     .pipe(sourcemaps.write("./"))
     .pipe(lineec()) // Consistent Line Endings for non UNIX systems.
-    .pipe(gulp.dest(config.styleDestination))
     .pipe(filter("**/*.css")) // Filtering stream to only css files.
     .pipe(mmq({ log: false })) // Merge Media Queries only for .min.css version.
     .pipe(browserSync.stream()) // Reloads style.css if that is enqueued.
@@ -521,9 +512,9 @@ gulp.task(
   "default",
   gulp.series(
     "clean-dest",
-    "copy-wordpress-style",
-    "copy-wordpress-php",
     "copy-wordpress-root-assets",
+    "copy-wordpress-php",
+    "copy-wordpress-style",
     "styles",
     "vendorsJS",
     "customJS",
