@@ -5,9 +5,12 @@
  * @package {{ template.name }}
  * @version {{ templateVersion }}
  */
+namespace AlexVNilsson\WordPressTheme;
 
-require_once(get_template_directory() . "/inc/partials/header.php");
- ?>
+use AlexVNilsson\WordPressTheme\Module\Header;
+use AlexVNilsson\WordPressTheme\Module\NavigationMenu;
+
+?>
 
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -25,22 +28,25 @@ require_once(get_template_directory() . "/inc/partials/header.php");
     <?php wp_head() ?>
 </head>
 
-<?php $logo = get_custom_logo_url(); ?>
+<?php
+    // wp_nav_menu(array( 'menu' => 'primary', 'container' => null, 'items_wrap' => '<ul class="nav primary">%3$s</ul>', 'menu_class' => 'navbar', 'theme_location' => 'header-menu', 'link_after' => '<i class="material-icons icon">expand_more</i>' ));
+?>
+
+<?php
+    $logo = Header::get_custom_logo_url();
+?>
 
 <body <?php body_class() ?>>
-    <div class="container-fluid">
-        <nav class="navbar primary" data-barba="wrapper">
-            <a class="brand" href="<?php get_site_url(); ?>">
-                <?php if (has_custom_logo()): ?>
-                <img src="<?php echo $logo[0] ?>" width="<?php echo $logo[1] ?>" height="<?php echo $logo[2] ?>"
-                    alt="Logotyp" />
-                <?php endif ?>
-                <span class="name"><?php bloginfo('name'); ?></span>
-            </a>
+    <nav class="navbar primary">
+        <a class="brand" href="<?php get_site_url(); ?>">
+            <?php if (has_custom_logo()): ?>
+            <img src="<?php echo $logo[0] ?>" width="<?php echo $logo[1] ?>" height="<?php echo $logo[2] ?>"
+                alt="Logotyp" />
+            <?php endif ?>
+            <span class="name"><?php bloginfo('name'); ?></span>
+        </a>
 
-            <?php wp_nav_menu(array( 'menu' => 'primary', 'container' => null, 'menu_class' => 'nav justify-end', 'theme_location' => 'header-menu' )); ?>
-        </nav>
-    </div>
-
+        <?php NavigationMenu::render_nav_menu('primary'); ?>
+    </nav>
 
     <div id="content" class="container">
