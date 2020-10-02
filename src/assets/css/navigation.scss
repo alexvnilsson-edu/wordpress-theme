@@ -1,124 +1,259 @@
-$nav-brand-link-color: darken($gray-900, 4%);
-$nav-page-item-link-color: lighten($gray-900, 20%);
-$nav-page-item-link-active-color: darken($gray-900, 8%);
+@import "vendor/bootstrap";
+
+$nav-brand-link-color: rgb(12, 12, 16);
+$nav-page-item-link-color: rgb(44, 44, 54);
+$nav-page-item-link-active-color:  rgb(34, 34, 44);
 $nav-page-item-link-bg-active: rgb(225, 225, 225);
 
 $nav-page-item-fast-animation: 125ms;
 $nav-page-item-normal-animation: 250ms;
 
-nav.navbar {
-  position: relative;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-start;
-  padding: 0.5rem 1rem;
+/*
+  Navigationsmeny för medium-stora bildskärmar och uppåt.
+*/
+@include media-breakpoint-up(md) {
+  nav.navbar {
+    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    padding: 0.5em 1em;
 
-  &.primary {
-    align-items: center;
-  }
+    &.primary {
+      align-items: center;
+    }
 
-  a.brand {
-    font-size: 1.48em;
-    font-weight: normal;
-    color: $nav-brand-link-color;
-    text-decoration: none;
+    a.brand {
+      font-size: 1.48em;
+      font-weight: normal;
+      color: $nav-brand-link-color;
+      text-decoration: none;
+    }
+
+    div.nav-wrapper {
+      ul.nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none;
+
+        li.item {
+          display: flex;
+          align-items: center;
+          position: relative;
+
+          &:not(:last-child) {
+            margin-right: 1.66em;
+          }
+
+          a.link {
+            display: flex;
+            padding: 0.24em 0.48em;
+
+            font-size: 1.1em;
+            font-weight: 500;
+            color: $nav-page-item-link-color;
+
+            transition: color 250ms ease-in-out;
+
+            &:hover, &:focus {
+              text-decoration: none;
+              color: $nav-page-item-link-active-color;
+            }
+
+            i.icon {
+              margin-left: auto;
+            }
+          }
+
+
+          &.page_item {
+            &:hover, &:focus > a {
+              text-decoration: none;
+              color: $nav-page-item-link-active-color;
+            }
+          }
+
+          &.page_item_has_children {
+            &:not(.expanded) > ul.children {
+              display: none;
+            }
+            &.expanded > ul.children {
+              display: block;
+            }
+
+            &:not(.expanded) > a {
+              transition: color $nav-page-item-fast-animation ease-in, background-color $nav-page-item-fast-animation ease-in;
+            }
+            &.expanded > a {
+              text-decoration: none;
+              background-color: $nav-page-item-link-bg-active;
+              color: $nav-page-item-link-active-color;
+
+              border-radius: 0.16em 0.16em 0 0;
+            }
+
+            & > ul.children {
+              display: none;
+              opacity: 0;
+              position: absolute;
+              top: 100%;
+              right: 0;
+
+              padding: 0 0;
+
+              background-color: rgb(255, 255, 255);
+
+              & > li.page_item a {
+                min-width: 6em;
+                margin: 0 auto;
+                padding: 0.32em 1.28em;
+
+                background-color: rgba(200, 200, 200, 0.12);
+
+                text-align: center;
+
+                transition: background-color 250ms ease-in, color 250ms ease-in;
+
+                &:last-child {
+                  border-radius: 0.16em 0 0.16em 0.16em;
+                }
+
+                &:hover, &:focus {
+                  background-color: rgba(225, 225, 225, 1.0);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      &.justify-end {
+        margin-left: auto;
+      }
+    }
   }
 }
 
-div.nav {
-	ul {
-		display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-		padding-left: 0;
-		margin-bottom: 0;
-    list-style: none;
+@include media-breakpoint-down(md) {
+  nav.navbar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding: 4em 0.5em 0.5em 0.5em;
 
-    li.page_item {
-      display: flex;
-      position: relative;
+    // transform: translateX(-100%);
 
-      &:not(:last-child) {
-        margin-right: 1.66em;
-      }
+    background-color: rgb(200, 200, 200);
 
-      a {
-        padding: 0.24em 0.48em;
+    z-index: 200;
 
-        font-size: 1.1em;
-        font-weight: 500;
-        color: $nav-page-item-link-color;
+    &.primary {
+      align-items: center;
+    }
 
-        transition: color 250ms ease-in-out;
+    a.brand {
+      font-size: 1.48em;
+      font-weight: normal;
+      color: $nav-brand-link-color;
+      text-decoration: none;
+    }
 
-        &:hover, &:focus {
-          text-decoration: none;
-          color: $nav-page-item-link-active-color;
-        }
-      }
+    div.nav-wrapper {
+      align-self: flex-start;
+      margin-top: 2em;
 
-      &.page_item {
-        &:hover, &:focus > a {
-          text-decoration: none;
-          color: $nav-page-item-link-active-color;
-        }
-      }
+      ul.nav {
+        display: flex;
+        margin: 0;
+        padding: 0;
+        flex-flow: column nowrap;
+        align-items: flex-start;
+        justify-content: flex-start;
+        list-style: none;
 
-      &.page_item_has_children {
-        &:not(.expanded) > ul.children {
-          display: none;
-        }
-        &.expanded > ul.children {
-          display: block;
-        }
+        li.item {
+          display: flex;
 
-        &:not(.expanded) > a {
-          transition: color $nav-page-item-fast-animation ease-in, background-color $nav-page-item-fast-animation ease-in;
-        }
-        &.expanded > a {
-          text-decoration: none;
-          background-color: $nav-page-item-link-bg-active;
-          color: $nav-page-item-link-active-color;
+          &:not(:last-child) {
+            margin-bottom: 1.66em;
+          }
 
-          border-radius: 0.16em 0.16em 0 0;
-        }
+          a {
+            padding: 0.24em 0.48em;
 
-        & > ul.children {
-          display: none;
-          opacity: 0;
-          position: absolute;
-          top: 100%;
-          right: 0;
+            font-size: 1.1em;
+            font-weight: 500;
+            color: $nav-page-item-link-color;
 
-          padding: 0 0;
-
-          background-color: rgb(255, 255, 255);
-
-          & > li.page_item a {
-            min-width: 6em;
-            margin: 0 auto;
-            padding: 0.32em 1.28em;
-
-            background-color: rgba(200, 200, 200, 0.12);
-
-            text-align: center;
-
-            transition: background-color 250ms ease-in, color 250ms ease-in;
-
-            &:last-child {
-              border-radius: 0.16em 0 0.16em 0.16em;
-            }
+            transition: color 250ms ease-in-out;
 
             &:hover, &:focus {
-              background-color: rgba(225, 225, 225, 1.0);
+              text-decoration: none;
+              color: $nav-page-item-link-active-color;
+            }
+          }
+
+          &.page_item_has_children {
+            &:not(.expanded) > ul.children {
+              display: none;
+            }
+            &.expanded > ul.children {
+              display: block;
+            }
+
+            &:not(.expanded) > a {
+              transition: color $nav-page-item-fast-animation ease-in, background-color $nav-page-item-fast-animation ease-in;
+            }
+            &.expanded > a {
+              text-decoration: none;
+              background-color: $nav-page-item-link-bg-active;
+              color: $nav-page-item-link-active-color;
+
+              border-radius: 0.16em 0.16em 0 0;
+            }
+
+            & > ul.children {
+              display: none;
+              opacity: 0;
+              position: absolute;
+              top: 100%;
+              right: 0;
+
+              padding: 0 0;
+
+              background-color: rgb(255, 255, 255);
+
+              & > li.page_item a {
+                min-width: 6em;
+                margin: 0 auto;
+                padding: 0.32em 1.28em;
+
+                background-color: rgba(200, 200, 200, 0.12);
+
+                text-align: center;
+
+                transition: background-color 250ms ease-in, color 250ms ease-in;
+
+                &:last-child {
+                  border-radius: 0.16em 0 0.16em 0.16em;
+                }
+
+                &:hover, &:focus {
+                  background-color: rgba(225, 225, 225, 1.0);
+                }
+              }
             }
           }
         }
       }
     }
-  }
-
-  &.justify-end {
-    margin-left: auto;
   }
 }
