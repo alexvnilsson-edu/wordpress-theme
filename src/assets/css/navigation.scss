@@ -3,7 +3,7 @@
 $nav-brand-link-color: rgb(12, 12, 16);
 $nav-page-item-link-color: rgb(44, 44, 54);
 $nav-page-item-link-active-color:  rgb(34, 34, 44);
-$nav-page-item-link-bg-active: rgb(225, 225, 225);
+$nav-page-item-link-bg-active: rgb(245, 245, 245);
 
 $nav-page-item-fast-animation: 125ms;
 $nav-page-item-normal-animation: 250ms;
@@ -17,7 +17,9 @@ $nav-page-item-normal-animation: 250ms;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
-    padding: 0.5em 1em;
+    align-items: flex-end;
+    padding: 0.5em 1em 0 1em;
+    margin-bottom: 0.5em;
 
     &.primary {
       align-items: center;
@@ -41,10 +43,9 @@ $nav-page-item-normal-animation: 250ms;
         margin-bottom: 0;
         list-style: none;
 
-        li.item {
+        & > li.item {
           display: flex;
           align-items: center;
-          position: relative;
 
           &:not(:last-child) {
             margin-right: 1.66em;
@@ -83,7 +84,9 @@ $nav-page-item-normal-animation: 250ms;
               display: none;
             }
             &.expanded > ul.nav-descendants {
-              display: block;
+              display: flex;
+
+              opacity: 1;
             }
 
             &:not(.expanded) > a {
@@ -93,37 +96,42 @@ $nav-page-item-normal-animation: 250ms;
               text-decoration: none;
               background-color: $nav-page-item-link-bg-active;
               color: $nav-page-item-link-active-color;
-
-              border-radius: 0.16em 0.16em 0 0;
             }
 
             & > ul.nav-descendants {
-              display: none;
               position: absolute;
-              top: 100%;
+              top: 0;
+              left: 0;
               right: 0;
 
-              padding: 0 0;
+              display: none; // `flex` när li.item.parent.expanded
+              flex-flow: column nowrap;
+              align-items: center;
 
-              background-color: rgb(255, 255, 255);
+              padding: 1em 0;
+
+              background-color: $nav-page-item-link-bg-active;
+              border-top: 2px solid rgb(75, 75, 75);
+
+              opacity: 0;
+
+              transition: opacity 500ms ease-in-out;
+
+              list-style: none;
 
               & > li.item a {
-                min-width: 6em;
+                display: flex;
                 margin: 0 auto;
                 padding: 0.32em 1.28em;
 
-                background-color: rgba(200, 200, 200, 0.12);
-
+                font-size: 1em;
+                color: rgb(50, 50, 50);
                 text-align: center;
 
-                transition: background-color 250ms ease-in, color 250ms ease-in;
-
-                &:last-child {
-                  border-radius: 0.16em 0 0.16em 0.16em;
-                }
+                transition: color 250ms ease-in;
 
                 &:hover, &:focus {
-                  background-color: rgba(225, 225, 225, 1.0);
+                  color: rgb(12, 12, 12);
                 }
               }
             }

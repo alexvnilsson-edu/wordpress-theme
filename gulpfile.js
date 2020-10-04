@@ -38,6 +38,8 @@ const spawn = require("child_process").spawn;
  * Load gulp plugins and passing them semantic names.
  */
 const gulp = require("gulp"); // Gulp of-course.
+const webpack = require("webpack");
+const webpackStream = require("webpack-stream"); // Webpack.
 
 // CSS related plugins.
 const sass = require("gulp-sass"); // Gulp plugin for Sass compilation.
@@ -415,6 +417,40 @@ gulp.task("mainJS", () => {
 });
 
 /**
+ * Task: `javascript`
+ */
+gulp.task("javascript", function () {
+  return gulp
+    .src("src/assets/js/main.js")
+    .pipe(
+      webpackStream({
+        mode: "development",
+        output: {
+          filename: "main.min.js",
+        },
+        optimization: {
+          minimize: true,
+        },
+        module: {
+          rules: [
+            {
+              test: /\.m?js$/,
+              exclude: /(node_modules|bower_components)/,
+              use: {
+                loader: "babel-loader",
+                options: {
+                  presets: ["@babel/preset-env"],
+                },
+              },
+            },
+          ],
+        },
+      })
+    )
+    .pipe(gulp.dest(config.jsMainDestination));
+});
+
+/**
  * Task: `images`.
  *
  * Minifies PNG, JPEG, GIF and SVG images.
@@ -518,7 +554,7 @@ gulp.task(
     "styles",
     "vendorsJS",
     "customJS",
-    "mainJS",
+    "javascript",
     "images",
     "wordpress-composer",
     browsersync,
@@ -527,7 +563,7 @@ gulp.task(
       gulp.watch(config.watchStyles, gulp.parallel("copy-wordpress-style", "styles", reload)); // Reload on SCSS file changes.
       gulp.watch(config.watchJsVendor, gulp.series("vendorsJS", reload)); // Reload on vendorsJS file changes.
       gulp.watch(config.watchJsCustom, gulp.series("customJS", reload)); // Reload on customJS file changes.
-      gulp.watch(config.watchJsMain, gulp.series("mainJS", reload)); // Reload on mainJS file changes.
+      gulp.watch(config.watchJsMain, gulp.series("javascript", reload)); // Reload on mainJS file changes.
       gulp.watch(config.imgSRC, gulp.series("images", reload)); // Reload on customJS file changes.
     }
   )

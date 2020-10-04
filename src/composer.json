@@ -18,7 +18,9 @@
 	},
 	"autoload": {
         "psr-4": {
-			"AlexVNilsson\\WordPressTheme\\": "./includes"
+			"AlexVNilsson\\WordPressTheme\\": "./includes",
+			"AlexVNilsson\\WordPressTheme\\Core\\": "./includes/Core",
+			"AlexVNilsson\\WordPressTheme\\Module\\": "./includes/Module"
         }
     }
 }
