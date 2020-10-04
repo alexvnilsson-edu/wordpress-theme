@@ -72,11 +72,7 @@ export class NavigationMobile {
    * @param {MouseEvent} event
    */
   onItemClick(pageItem, event) {
-    /** @var Element */
     const target = event.target;
-
-    console.log(target, pageItem);
-
     const descendantMenu = target.closest("ul.nav-descendants");
 
     if (!descendantMenu) {
