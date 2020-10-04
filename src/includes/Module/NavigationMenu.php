@@ -41,7 +41,7 @@ class NavigationMenu
                 <?php foreach ($item->children as $child): ?>
                 <li class="item">
                     <a href="<?php echo $child->url; ?>" class="link">
-                        <span><?php echo $child->title; ?></span>
+                        <?php echo $child->title; ?>
                     </a>
                 </li>
                 <?php endforeach ?>

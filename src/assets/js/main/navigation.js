@@ -28,16 +28,16 @@ export class NavigationMobile {
   }
 
   setMenuExpanded() {
-    const wpAdminBar = document.querySelector("#adminbar");
-    const primaryMenuClientTop = this.primaryMenu.clientTop;
+    const wpAdminBar = document.querySelector("#wpadminbar");
+    let primaryMenuClientTop = this.primaryMenu.clientTop;
 
     if (wpAdminBar) {
       primaryMenuClientTop += wpAdminBar.clientHeight;
     }
 
     this.primaryMenu.querySelector(
-      "div.nav-wrapper"
-    ).style.top = `${primaryMenuClientTop.top}px`;
+      "div.nav-wrapper.mobile"
+    ).style.top = `${primaryMenuClientTop}px`;
 
     this.primaryMenu.classList.add("expanded");
     this.primaryMenu.setAttribute("data-expanded", "true");
@@ -69,17 +69,29 @@ export class NavigationMobile {
   /**
    *
    * @param {Element} pageItem
-   * @param {Event} event
+   * @param {MouseEvent} event
    */
   onItemClick(pageItem, event) {
-    if (!pageItem.hasAttribute("data-expanded")) {
-      this.setItemExpanded(pageItem);
-    } else {
-      this.setItemCollapsed(pageItem);
-    }
+    /** @var Element */
+    const target = event.target;
 
-    event.preventDefault();
-    event.stopPropagation();
+    console.log(target, pageItem);
+
+    const descendantMenu = target.closest("ul.nav-descendants");
+
+    if (!descendantMenu) {
+      // Om jag inte kan hitta någon ul.nav-descendants ovanför elementet, anta högsta nivån.
+      if (!pageItem.hasAttribute("data-expanded")) {
+        this.setItemExpanded(pageItem);
+      } else {
+        this.setItemCollapsed(pageItem);
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      // Om jag hittar ul.nav-descendants ovanför elementet, anta underliggande nivå.
+    }
   }
 
   onClick(event) {

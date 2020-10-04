@@ -192,6 +192,7 @@ $nav-page-item-normal-animation: 250ms;
     div.nav-wrapper.mobile {
       position: absolute;
       top: 0;
+      bottom: 0;
       left: 0;
       right: 0;
 
@@ -212,7 +213,7 @@ $nav-page-item-normal-animation: 250ms;
           display: block;
 
           &:not(:last-child) {
-            margin-right: 1.66em;
+            margin-bottom: 0.66em;
           }
 
           &:hover > a.link, &:focus > a.link {

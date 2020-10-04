@@ -41,7 +41,7 @@ use AlexVNilsson\WordPressTheme\Module\NavigationMenu;
 
 <body <?php body_class() ?>>
     <nav class="navbar primary">
-        <a class="brand" href="<?php get_site_url(); ?>">
+        <a class="brand" href="<?php echo get_home_url(); ?>">
             <?php if (has_custom_logo()): ?>
             <img src="<?php echo $logo[0] ?>" width="<?php echo $logo[1] ?>" height="<?php echo $logo[2] ?>"
                 alt="Logotyp" />
