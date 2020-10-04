@@ -46,10 +46,16 @@ use AlexVNilsson\WordPressTheme\Module\NavigationMenu;
             <img src="<?php echo $logo[0] ?>" width="<?php echo $logo[1] ?>" height="<?php echo $logo[2] ?>"
                 alt="Logotyp" />
             <?php endif ?>
+
             <span class="name"><?php bloginfo('name'); ?></span>
         </a>
 
+        <a href="#" class="menu-expander">
+            <i class="material-icons">menu</i>
+        </a>
+
         <?php NavigationMenu::render_nav_menu('header'); ?>
+        <?php NavigationMenu::render_nav_menu('header', 'mobile'); ?>
     </nav>
 
     <div id="content" class="container">

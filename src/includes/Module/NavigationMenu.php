@@ -12,7 +12,7 @@ use AlexVNilsson\WordPressTheme\Core\Log;
 
 class NavigationMenu
 {
-    public static function render_nav_menu($menu_name)
+    public static function render_nav_menu($menu_name, $container_name = null)
     {
         $log = Log::getLogger();
 
@@ -22,7 +22,7 @@ class NavigationMenu
             return false;
         }
         $menu_items = Header::get_nav_menu_items($locations[$menu_name]); ?>
-<div class="nav-wrapper">
+<div class="<?php echo join(' ', array('nav-wrapper', $container_name)) ?>">
     <?php if ($menu_items && !empty($menu_items)): ?>
     <ul class="nav">
         <?php foreach ($menu_items as $item): ?>

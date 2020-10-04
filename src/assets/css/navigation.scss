@@ -32,7 +32,11 @@ $nav-page-item-normal-animation: 250ms;
       text-decoration: none;
     }
 
-    div.nav-wrapper {
+    a.menu-expander {
+      display: none;
+    }
+
+    div.nav-wrapper:not(.mobile) {
       margin-left: auto;
       ul.nav {
         display: flex;
@@ -143,26 +147,21 @@ $nav-page-item-normal-animation: 250ms;
         margin-left: auto;
       }
     }
+
+    div.nav-wrapper.mobile {
+      display: none;
+    }
   }
 }
 
 @include media-breakpoint-down(md) {
   nav.navbar {
-    position: fixed;
-    right: 0;
-    top: 0;
-    bottom: 0;
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: flex-end;
-    padding: 4em 0.5em 0.5em 0.5em;
-
-    // transform: translateX(-100%);
-
-    background-color: rgb(200, 200, 200);
-
-    z-index: 200;
+    padding: 0.5em 1em 0 1em;
+    margin-bottom: 0.5em;
 
     &.primary {
       align-items: center;
@@ -175,27 +174,54 @@ $nav-page-item-normal-animation: 250ms;
       text-decoration: none;
     }
 
-    div.nav-wrapper {
-      align-self: flex-start;
-      margin-top: 2em;
+    a.menu-expander {
+      margin-left: auto;
+
+      color: $nav-brand-link-color;
+
+      z-index: 100;
+    }
+
+    &:not(.expanded) div.nav-wrapper.mobile {
+      display: none;
+    }
+    &.expanded div.nav-wrapper.mobile {
+      display: block;
+    }
+
+    div.nav-wrapper.mobile {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+
+      padding: 1em 1.5em;
+
+      background-color: rgb(250, 250, 250);
+
+      z-index: 99;
 
       ul.nav {
-        display: flex;
-        margin: 0;
-        padding: 0;
-        flex-flow: column nowrap;
-        align-items: flex-start;
-        justify-content: flex-start;
+        display: block;
+        padding-left: 0;
+
+        margin-bottom: 0;
         list-style: none;
 
-        li.item {
-          display: flex;
+        & > li.item {
+          display: block;
 
           &:not(:last-child) {
-            margin-bottom: 1.66em;
+            margin-right: 1.66em;
           }
 
-          a {
+          &:hover > a.link, &:focus > a.link {
+            text-decoration: none;
+            color: $nav-page-item-link-active-color;
+          }
+
+          a.link {
+            display: flex;
             padding: 0.24em 0.48em;
 
             font-size: 1.1em;
@@ -204,17 +230,16 @@ $nav-page-item-normal-animation: 250ms;
 
             transition: color 250ms ease-in-out;
 
-            &:hover, &:focus {
-              text-decoration: none;
-              color: $nav-page-item-link-active-color;
+            i.icon {
+              margin-left: auto;
             }
           }
 
-          &.page_item_has_children {
-            &:not(.expanded) > ul.children {
+          &.parent {
+            &:not(.expanded) > ul.nav-descendants {
               display: none;
             }
-            &.expanded > ul.children {
+            &.expanded > ul.nav-descendants {
               display: block;
             }
 
@@ -223,46 +248,50 @@ $nav-page-item-normal-animation: 250ms;
             }
             &.expanded > a {
               text-decoration: none;
-              background-color: $nav-page-item-link-bg-active;
               color: $nav-page-item-link-active-color;
-
-              border-radius: 0.16em 0.16em 0 0;
             }
 
-            & > ul.children {
-              display: none;
-              opacity: 0;
-              position: absolute;
-              top: 100%;
-              right: 0;
+            & > ul.nav-descendants {
+              display: block;
 
-              padding: 0 0;
+              margin: 0;
+              padding: 0;
 
-              background-color: rgb(255, 255, 255);
+              display: none; // `flex` när li.item.parent.expanded
+              flex-flow: column nowrap;
+              align-items: flex-start;
 
-              & > li.page_item a {
-                min-width: 6em;
+              transition: opacity 500ms ease-in-out;
+
+              list-style: none;
+
+              & > li.item a {
+                display: flex;
                 margin: 0 auto;
                 padding: 0.32em 1.28em;
 
-                background-color: rgba(200, 200, 200, 0.12);
-
+                font-size: 1em;
+                color: rgb(50, 50, 50);
                 text-align: center;
 
-                transition: background-color 250ms ease-in, color 250ms ease-in;
-
-                &:last-child {
-                  border-radius: 0.16em 0 0.16em 0.16em;
-                }
+                transition: color 250ms ease-in;
 
                 &:hover, &:focus {
-                  background-color: rgba(225, 225, 225, 1.0);
+                  color: rgb(12, 12, 12);
                 }
               }
             }
           }
         }
       }
+
+      &.justify-end {
+        margin-left: auto;
+      }
+    }
+
+    div.nav-wrapper:not(.mobile) {
+      display: none;
     }
   }
 }

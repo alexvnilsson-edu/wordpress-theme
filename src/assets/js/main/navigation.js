@@ -11,20 +11,106 @@ const opts = {
   },
 };
 
+export class NavigationMobile {
+  constructor() {
+    this.primaryMenu = document.querySelector("nav.navbar.primary");
+    this.primaryMenuExpander = this.primaryMenu.querySelector("a.menu-expander");
+
+    this.primaryMenuExpander.addEventListener("click", event => this.onClick(event));
+
+    document
+      .querySelectorAll("div.nav-wrapper.mobile ul.nav li.item ul.nav-descendants")
+      .forEach(e => {
+        const pageItem = e.closest("li.parent");
+
+        pageItem.addEventListener("click", event => this.onItemClick(pageItem, event));
+      });
+  }
+
+  setMenuExpanded() {
+    const wpAdminBar = document.querySelector("#adminbar");
+    const primaryMenuClientTop = this.primaryMenu.clientTop;
+
+    if (wpAdminBar) {
+      primaryMenuClientTop += wpAdminBar.clientHeight;
+    }
+
+    this.primaryMenu.querySelector(
+      "div.nav-wrapper"
+    ).style.top = `${primaryMenuClientTop.top}px`;
+
+    this.primaryMenu.classList.add("expanded");
+    this.primaryMenu.setAttribute("data-expanded", "true");
+  }
+
+  setMenuCollapsed() {
+    this.primaryMenu.classList.remove("expanded");
+    this.primaryMenu.removeAttribute("data-expanded");
+  }
+
+  /**
+   *
+   * @param {Element} pageItem
+   */
+  setItemExpanded(pageItem) {
+    pageItem.setAttribute("data-expanded", "true");
+    pageItem.classList.add("expanded");
+  }
+
+  /**
+   *
+   * @param {Element} pageItem
+   */
+  setItemCollapsed(pageItem) {
+    pageItem.removeAttribute("data-expanded", "false");
+    pageItem.classList.remove("expanded");
+  }
+
+  /**
+   *
+   * @param {Element} pageItem
+   * @param {Event} event
+   */
+  onItemClick(pageItem, event) {
+    if (!pageItem.hasAttribute("data-expanded")) {
+      this.setItemExpanded(pageItem);
+    } else {
+      this.setItemCollapsed(pageItem);
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  onClick(event) {
+    if (!this.primaryMenu.hasAttribute("data-expanded")) {
+      this.setMenuExpanded();
+    } else {
+      this.setMenuCollapsed();
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+  }
+}
+
 export class Navigation {
   constructor() {
     this.animations = {};
+    this.mobile = new NavigationMobile();
     gsap.registerPlugin(CSSPlugin);
   }
   init() {
-    document.querySelectorAll("ul.nav-descendants").forEach(e => {
-      const pageItem = e.closest("li.parent");
+    document
+      .querySelectorAll("div.nav-wrapper:not(.mobile) ul.nav li.item ul.nav-descendants")
+      .forEach(e => {
+        const pageItem = e.closest("li.parent");
 
-      this._bindClick(pageItem);
+        this._bindClick(pageItem);
 
-      pageItem.addEventListener("mouseover", event => this.onMouseOver(pageItem, event));
-      pageItem.addEventListener("mouseleave", event => this.onMouseLeave(pageItem, event));
-    });
+        pageItem.addEventListener("mouseover", event => this.onMouseOver(pageItem, event));
+        pageItem.addEventListener("mouseleave", event => this.onMouseLeave(pageItem, event));
+      });
   }
 
   /**
