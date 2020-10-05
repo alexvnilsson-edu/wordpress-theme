@@ -33,6 +33,7 @@
     "bootstrap": "^4.5.2",
     "browser-sync": "^2.11.1",
     "browserify": "^16.5.2",
+    "css-loader": "^4.3.0",
     "del": "^6.0.0",
     "easydropdown": "^4.2.0",
     "eslint": "^5.5.0",
@@ -62,8 +63,10 @@
     "gulp-uglifycss": "^1.0.6",
     "gulp-wp-pot": "^2.0.7",
     "gulplog": "^1.0.0",
+    "mini-css-extract-plugin": "^0.11.3",
     "mobile-detect": "^1.4.4",
     "prettier": "2.1.2",
+    "sass-loader": "^10.0.2",
     "webpack": "^4.44.2",
     "webpack-stream": "^6.1.0"
   },

@@ -73,6 +73,9 @@ const beep = require("beepbeep");
 const template = require("gulp-template"); // Render/pre-compile Lodash templates.
 const shell = require("gulp-shell"); // Execute shell commands.
 
+// Webpack utilities/plugins.
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 /**
  * Custom Error Handler.
  *
@@ -198,46 +201,42 @@ gulp.task(
  *
  * Compiles Sass, Autoprefixes it and Minifies CSS.
  *
- * This task does the following:
- *    1. Gets the source scss file
- *    2. Compiles Sass to CSS
- *    3. Writes Sourcemaps for it
- *    4. Autoprefixes it and generates style.css
- *    5. Renames the CSS file with suffix .min.css
- *    6. Minifies the CSS file and generates style.min.css
- *    7. Injects CSS or reloads the browser via browserSync
+ *
  */
-gulp.task("styles", () => {
-  return gulp
-    .src(config.stylesSRC, {
-      allowEmpty: true,
-      base: path.join(__dirname, "src", "assets", "css"),
-    })
-    .pipe(template(config.templateVariables, { interpolate: /{{(.+?)}}/gs }))
-    .pipe(plumber(errorHandler))
-    .pipe(sourcemaps.init())
-    .pipe(
-      sass({
-        includePaths: ["node_modules"],
-        errLogToConsole: config.errLogToConsole,
-        outputStyle: config.outputStyle,
-        precision: config.precision,
-      }).on("error", sass.logError)
-    )
-    .pipe(sourcemaps.write({ includeContent: false }))
-    .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(autoprefixer(config.BROWSERS_LIST))
-    .pipe(sourcemaps.write("./"))
-    .pipe(lineec()) // Consistent Line Endings for non UNIX systems.
-    .pipe(filter("**/*.css")) // Filtering stream to only css files.
-    .pipe(mmq({ log: false })) // Merge Media Queries only for .min.css version.
-    .pipe(browserSync.stream()) // Reloads style.css if that is enqueued.
-    .pipe(rename({ suffix: ".min" }))
-    .pipe(minifycss({ maxLineLen: 10 }))
-    .pipe(lineec()) // Consistent Line Endings for non UNIX systems.
-    .pipe(gulp.dest(config.styleDestination))
-    .pipe(filter("**/*.css")) // Filtering stream to only css files.
-    .pipe(browserSync.stream()); // Reloads style.min.css if that is enqueued.
+gulp.task("styles", function () {
+  return (
+    gulp
+      .src(["src/assets/css/**/*.scss"])
+      .pipe(
+        webpackStream({
+          entry: {
+            "main/style": "./src/assets/css/main/index.scss",
+            "editor/style": "./src/assets/css/editor/index.scss",
+          },
+          mode: "production",
+          plugins: [
+            new MiniCssExtractPlugin({
+              filename: "[name].css",
+            }),
+          ],
+          module: {
+            rules: [
+              {
+                test: /\.s?css$/,
+                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+              },
+            ],
+          },
+          stats: {
+            assets: false,
+            children: false,
+            chunks: false,
+          },
+        })
+      )
+      //.pipe(filter("*.css"))
+      .pipe(gulp.dest(config.styleDestination))
+  );
 });
 
 /**
@@ -426,12 +425,12 @@ gulp.task("javascript", function () {
       webpackStream({
         entry: {
           main: "./src/assets/js/main.js",
-          testblock: "./src/assets/js/blocks/test.js",
-          contactblock: "./src/assets/js/blocks/contact.js",
+          "blocks/test": "./src/assets/js/blocks/test.js",
+          "blocks/contact": "./src/assets/js/blocks/contact.js",
         },
         mode: "production",
         output: {
-          filename: "[name].min.js",
+          filename: "[name].js",
         },
         optimization: {
           minimize: true,
@@ -449,6 +448,11 @@ gulp.task("javascript", function () {
               },
             },
           ],
+        },
+        stats: {
+          assets: false,
+          children: false,
+          chunks: false,
         },
       })
     )
