@@ -1,10 +1,41 @@
+$footer-menu-link-color: rgb(24, 24, 24);
+
 body > div.footer {
   margin-top: 6em;
 
   background-color: rgb(225, 225, 225);
   color: rgb(10, 10, 10);
 
-  div.container {
-    padding: 1em 0;
+  .grid {
+    display: grid;
+    grid-template-columns: auto auto;
+
+    padding: 0;
+
+    .cell {
+      padding: 1em 2em;
+
+      .menu {
+        margin: 0 0 0 0;
+        padding: 0;
+        list-style: none;
+
+        .menu-item {
+          a {
+            font-size: 0.90em;
+            font-weight: 500;
+            color: $footer-menu-link-color;
+          }
+        }
+      }
+
+      &.first {
+        grid-column: 1;
+      }
+
+      &.second {
+        grid-column: 2;
+      }
+    }
   }
 }

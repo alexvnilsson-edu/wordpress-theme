@@ -10,8 +10,15 @@
 </div>
 
 <div class="container-fluid footer">
-    <div class="container">
-        <p>...</p>
+    <div class="container grid">
+        <div class="cell first">
+            &copy; <?php echo date("Y") ?> Alex V. Nilsson
+
+
+        </div>
+        <div class="cell second">
+            <?php wp_nav_menu(); ?>
+        </div>
     </div>
 </div>
 <?php wp_footer() ?>
