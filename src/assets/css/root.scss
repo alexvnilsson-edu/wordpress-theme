@@ -2,7 +2,12 @@
 @import "./vendor";
 @import "./footer";
 @import "./navigation";
+@import "./container";
+@import "./forms";
 
 body {
-	font-family: 'Roboto Slab', Georgia, Times, 'Times New Roman', serif;
+  font-family: 'Roboto Slab', Georgia, Times, 'Times New Roman', serif;
+
+  background-color: rgb(250, 250, 250);
+  color: rgb(12, 12, 12);
 }

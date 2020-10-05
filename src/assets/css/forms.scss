@@ -1,0 +1,16 @@
+form {
+  .form-group {
+    &.flex {
+      display: flex;
+
+      &.row {
+        margin: 0;
+        flex-flow: row nowrap;
+
+        &.right {
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+}

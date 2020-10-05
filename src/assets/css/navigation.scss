@@ -3,7 +3,7 @@
 $nav-brand-link-color: rgb(12, 12, 16);
 $nav-page-item-link-color: rgb(44, 44, 54);
 $nav-page-item-link-active-color:  rgb(34, 34, 44);
-$nav-page-item-link-bg-active: rgb(245, 245, 245);
+$nav-page-item-link-bg-active: rgb(255, 255, 255);
 
 $nav-page-item-fast-animation: 125ms;
 $nav-page-item-normal-animation: 250ms;
@@ -115,6 +115,7 @@ $nav-page-item-normal-animation: 250ms;
               padding: 1em 0;
 
               background-color: $nav-page-item-link-bg-active;
+              box-shadow: 0 1px 3px 1px rgba(12, 12, 12, 0.16);
               border-top: 2px solid rgb(75, 75, 75);
 
               opacity: 0;

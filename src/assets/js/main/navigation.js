@@ -105,20 +105,38 @@ export class NavigationMobile {
 export class Navigation {
   constructor() {
     this.animations = {};
+    this.state = {
+      expandedItem: undefined,
+    };
     this.mobile = new NavigationMobile();
     gsap.registerPlugin(CSSPlugin);
+
+    this._bindGlobalEvents();
+    this._bindItemEvents();
   }
-  init() {
+
+  _bindGlobalEvents() {
+    document.addEventListener("keyup", event => this.onDocumentKeyUp(event));
+  }
+
+  _bindItemEvents() {
     document
       .querySelectorAll("div.nav-wrapper:not(.mobile) ul.nav li.item ul.nav-descendants")
       .forEach(e => {
         const pageItem = e.closest("li.parent");
+        this._bindItemClickEvents(pageItem);
 
-        this._bindClick(pageItem);
-
-        pageItem.addEventListener("mouseover", event => this.onMouseOver(pageItem, event));
-        pageItem.addEventListener("mouseleave", event => this.onMouseLeave(pageItem, event));
+        pageItem.addEventListener("mouseover", event => this.onItemMouseOver(pageItem, event));
+        pageItem.addEventListener("mouseleave", event =>
+          this.onItemMouseLeave(pageItem, event)
+        );
+        pageItem.addEventListener("focusin", event => this.onItemFocusIn(pageItem, event));
+        pageItem.addEventListener("focusout", event => this.onItemFocusOut(pageItem, event));
       });
+
+    document.addEventListener("keypress", event => {
+      console.log(event);
+    });
   }
 
   /**
@@ -126,7 +144,7 @@ export class Navigation {
    *
    * @param {Element} pageItem Menu item instance.
    */
-  _bindClick(pageItem) {
+  _bindItemClickEvents(pageItem) {
     const pageItemLink = pageItem.querySelector("a.link");
 
     // pageItem.addEventListener("click", event => this.onClick(pageItem, event));
@@ -171,6 +189,7 @@ export class Navigation {
       this.setDescendantExpandedAppearance(pageItem);
       pageItem.classList.add(opts.class.expanded);
       this.cancelPendingCollapse(pageItem);
+      this.state.expandedItem = pageItem;
     }
   }
 
@@ -184,6 +203,7 @@ export class Navigation {
       this.setDescendantCollapsedAppearance(pageItem);
       pageItem.classList.remove(opts.class.expanded);
       pageItem.removeAttribute(opts.attribute.isPendingCollapse);
+      this.state.expandedItem = undefined;
     }
   }
 
@@ -221,6 +241,18 @@ export class Navigation {
 
   /**
    *
+   * @param {KeyboardEvent} event
+   */
+  onDocumentKeyUp(event) {
+    if (event && event.key === "Escape") {
+      if (this.state.expandedItem !== undefined) {
+        this.setCollapsed(this.state.expandedItem);
+      }
+    }
+  }
+
+  /**
+   *
    * @param {Element} pageItem Element of menu link.
    * @param {MouseEvent} event Event.
    */
@@ -243,7 +275,7 @@ export class Navigation {
    * @param {Element} pageItem
    * @param {MouseEvent} event
    */
-  onMouseOver(pageItem, event) {
+  onItemMouseOver(pageItem, event) {
     if (this.canCollapse(pageItem)) {
       this.cancelPendingCollapse(pageItem);
     }
@@ -256,11 +288,11 @@ export class Navigation {
    * @param {Element} pageItem
    * @param {MouseEvent} event
    */
-  onMouseLeave(pageItem, event) {
+  onItemMouseLeave(pageItem, event) {
     if (!pageItem.hasAttribute(opts.attribute.isPendingCollapse)) {
       this.setPendingCollapse(
         pageItem,
-        setTimeout(() => this.onMouseLeaveDelayed(pageItem), 250)
+        setTimeout(() => this.onItemMouseLeaveDelayed(pageItem), 250)
       );
     }
   }
@@ -269,9 +301,36 @@ export class Navigation {
    *
    * @param {Element} pageItem
    */
-  onMouseLeaveDelayed(pageItem) {
+  onItemMouseLeaveDelayed(pageItem) {
     if (this.canCollapse(pageItem)) {
       this.setCollapsed(pageItem);
+    }
+  }
+
+  /**
+   *
+   * @param {Element} pageItem
+   * @param {FocusEvent} event
+   */
+  onItemFocusIn(pageItem, event) {
+    if (this.canCollapse(pageItem)) {
+      this.cancelPendingCollapse(pageItem);
+    }
+
+    this.setExpanded(pageItem);
+  }
+
+  /**
+   *
+   * @param {Element} pageItem
+   * @param {FocusEvent} event
+   */
+  onItemFocusOut(pageItem, event) {
+    if (!pageItem.hasAttribute(opts.attribute.isPendingCollapse)) {
+      this.setPendingCollapse(
+        pageItem,
+        setTimeout(() => this.onItemMouseLeaveDelayed(pageItem), 250)
+      );
     }
   }
 }
