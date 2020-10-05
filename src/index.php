@@ -6,16 +6,21 @@
  * @version {{ templateVersion }}
  */
 
+use AlexVNilsson\WordPressTheme\Module\Posts;
+
 ?>
 
 <?php get_header(); ?>
 
 <?php
-  if (have_posts()):
-    while (have_posts()): the_post(); ?>
-<h1><?php echo the_title(); ?></h1>
-<p><?php echo the_content(); ?></p>
-<?php endwhile;
+        if (have_posts()): ?>
+<div class="blog-container">
+    <div class="container">
+        <div class="blog"> <?php
+        while (have_posts()): the_post(); Posts::render_post(); endwhile; ?>
+        </div>
+    </div>
+</div><?php
   endif;
 ?>
 

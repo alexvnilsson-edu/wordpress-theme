@@ -58,4 +58,4 @@ use AlexVNilsson\WordPressTheme\Module\NavigationMenu;
         <?php NavigationMenu::render_nav_menu('header', 'mobile'); ?>
     </nav>
 
-    <div id="content" class="container">
+    <div id="content">
