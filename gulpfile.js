@@ -421,12 +421,17 @@ gulp.task("mainJS", () => {
  */
 gulp.task("javascript", function () {
   return gulp
-    .src("src/assets/js/main.js")
+    .src(["src/assets/js/**/*.js"])
     .pipe(
       webpackStream({
-        mode: "development",
+        entry: {
+          main: "./src/assets/js/main.js",
+          testblock: "./src/assets/js/blocks/test.js",
+          contactblock: "./src/assets/js/blocks/contact.js",
+        },
+        mode: "production",
         output: {
-          filename: "main.min.js",
+          filename: "[name].min.js",
         },
         optimization: {
           minimize: true,
@@ -434,12 +439,12 @@ gulp.task("javascript", function () {
         module: {
           rules: [
             {
-              test: /\.m?js$/,
+              test: /\.(js|jsx)$/,
               exclude: /(node_modules|bower_components)/,
               use: {
                 loader: "babel-loader",
                 options: {
-                  presets: ["@babel/preset-env"],
+                  presets: ["@babel/preset-env", "@babel/preset-react"],
                 },
               },
             },
@@ -563,7 +568,7 @@ gulp.task(
       gulp.watch(config.watchStyles, gulp.parallel("copy-wordpress-style", "styles", reload)); // Reload on SCSS file changes.
       gulp.watch(config.watchJsVendor, gulp.series("vendorsJS", reload)); // Reload on vendorsJS file changes.
       gulp.watch(config.watchJsCustom, gulp.series("customJS", reload)); // Reload on customJS file changes.
-      gulp.watch(config.watchJsMain, gulp.series("javascript", reload)); // Reload on mainJS file changes.
+      gulp.watch(["./src/assets/js/**/*.js"], gulp.series("javascript", reload)); // Reload on mainJS file changes.
       gulp.watch(config.imgSRC, gulp.series("images", reload)); // Reload on customJS file changes.
     }
   )
