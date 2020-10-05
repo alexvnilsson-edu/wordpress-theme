@@ -1,4 +1,6 @@
 const dom = require("./vendor/dom");
 import { Navigation } from "./main/navigation";
 
-dom.documentReady(() => new Navigation());
+dom.documentReady(() => {
+  const navigation = new Navigation();
+});
