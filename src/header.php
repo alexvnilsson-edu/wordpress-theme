@@ -7,10 +7,9 @@
  */
 
 require_once(THEME_PATH . "/includes/Module/Header.php");
-require_once(THEME_PATH ."/includes/Module/NavigationMenu.php");
 
+use AlexVNilsson\WordPressTheme\Core\Menu;
 use AlexVNilsson\WordPressTheme\Module\Header;
-use AlexVNilsson\WordPressTheme\Module\NavigationMenu;
 
 ?>
 
@@ -31,12 +30,7 @@ use AlexVNilsson\WordPressTheme\Module\NavigationMenu;
 </head>
 
 <?php
-    // wp_nav_menu(array( 'menu' => 'primary', 'container' => null, 'items_wrap' => '<ul class="nav primary">%3$s</ul>', 'menu_class' => 'navbar', 'theme_location' => 'header-menu', 'link_after' => '<i class="material-icons icon">expand_more</i>' ));
-?>
-
-<?php
     $logo = Header::get_custom_logo_url();
-    //$logo = null; //Header::get_custom_logo_url();
 ?>
 
 <body <?php body_class() ?>>
@@ -51,11 +45,10 @@ use AlexVNilsson\WordPressTheme\Module\NavigationMenu;
         </a>
 
         <a href="#" class="menu-expander">
-            <i class="material-icons">menu</i>
+            <i class="icon material-icons">menu</i>
         </a>
 
-        <?php NavigationMenu::render_nav_menu('header'); ?>
-        <?php NavigationMenu::render_nav_menu('header', 'mobile'); ?>
+        <?php Header::render_nav_menu('header'); ?>
     </nav>
 
     <div id="content">

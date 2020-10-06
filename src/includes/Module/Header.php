@@ -7,23 +7,8 @@
  */
 namespace AlexVNilsson\WordPressTheme\Module;
 
-class Menu_Item
-{
-    public $ID;
-    public $title;
-    public $url;
-    public $children;
-
-    public function __construct($ID, $title, $url, $children = array())
-    {
-        $this->ID = $ID;
-        $this->title = $title;
-        $this->url = $url;
-        $this->children = $children;
-
-        return $this;
-    }
-}
+use AlexVNilsson\WordPressTheme\Core\Menu;
+use AlexVNilsson\WordPressTheme\Core\MenuItem;
 
 class Header
 {
@@ -35,25 +20,43 @@ class Header
         return $logo;
     }
 
-    public static function get_nav_menu_items($menu_id, array $args = array())
+    public static function render_nav_menu($menu_location_name = null, $container_name = null)
     {
-        $menu = array();
-        $menu_items = wp_get_nav_menu_items($menu_id, array_merge(array(), $args));
-
-        if (!empty($menu_items)) {
-            foreach ($menu_items as $item) {
-                if (intval($item->menu_item_parent) == 0) {
-                    $menu[$item->ID] = new Menu_Item($item->ID, $item->title, $item->url, array());
-                }
-            }
-
-            foreach ($menu_items as $item) {
-                if ($item->menu_item_parent) {
-                    $menu[$item->menu_item_parent]->children[$item->ID] = new Menu_Item($item->ID, $item->title, $item->url);
-                }
-            }
+        $locations = get_nav_menu_locations();
+        if (!array_key_exists($menu_location_name, $locations)) {
+            return false;
         }
+        $menu_items = Menu::get_nav_menu_items($locations[$menu_location_name]); ?>
+<div class="<?php echo join(' ', array('nav-wrapper', $container_name)) ?>">
+    <?php if ($menu_items && !empty($menu_items)): ?>
+    <ul class="nav">
+        <?php foreach ($menu_items as $item): ?>
+        <?php $hasDescendants = ($item->children && count($item->children) > 0); ?>
 
-        return $menu;
+        <li class="<?php echo join(' ', array('item', $hasDescendants ? 'parent' : '')) ?>">
+            <a href="<?php echo $item->url; ?>" class="link">
+                <?php echo $item->title; ?>
+                <?php if ($hasDescendants): ?>
+                <i class="icon material-icons">expand_more</i>
+                <?php endif ?>
+            </a>
+
+            <?php if (!empty($item->children)): ?>
+            <ul class="nav-descendants">
+                <?php foreach ($item->children as $child): ?>
+                <li class="item">
+                    <a href="<?php echo $child->url; ?>" class="link">
+                        <?php echo $child->title; ?>
+                    </a>
+                </li>
+                <?php endforeach ?>
+            </ul>
+            <?php endif ?>
+        </li>
+        <?php endforeach ?>
+    </ul>
+    <?php endif ?>
+</div>
+<?php
     }
 }

@@ -5,20 +5,25 @@
  * @package {{ template.name }}
  * @version {{ templateVersion }}
  */
- ?>
+
+
+require_once(THEME_PATH . "/includes/Module/Footer.php");
+
+use AlexVNilsson\WordPressTheme\Module\Footer;
+
+?>
 
 </div>
 
-<div class="container-fluid footer">
-    <div class="container grid">
-        <div class="cell first">
-            &copy; <?php echo date("Y") ?> Alex V. Nilsson
+<div class="container footer">
+    <div class="field copyright">
+        &copy; <?php echo date("Y") ?> Alex V. Nilsson
+    </div>
 
+    <div class="field separate"></div>
 
-        </div>
-        <div class="cell second">
-            <?php wp_nav_menu(); ?>
-        </div>
+    <div class="field menu">
+        <?php Footer::render_nav_menu('footer') ?>
     </div>
 </div>
 <?php wp_footer() ?>

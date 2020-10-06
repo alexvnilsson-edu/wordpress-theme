@@ -59,7 +59,7 @@ class ThemeSupport
     {
         register_nav_menus(
             array(
-                'header' => __('Header Navigation Menu'),
+                'header' => __('Header Menu'),
                 'footer' => __('Footer Menu')
             )
         );

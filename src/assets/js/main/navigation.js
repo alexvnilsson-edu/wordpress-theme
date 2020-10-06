@@ -2,21 +2,36 @@ import { gsap, TweenMax } from "gsap/gsap-core";
 import { CSSPlugin } from "gsap/CSSPlugin";
 
 const opts = {
+  viewPort: {
+    mobileWidth: 992,
+  },
   class: {
     collapsed: "collapsed",
     expanded: "expanded",
   },
   attribute: {
     isPendingCollapse: "data-is-pending-collapse",
+    expanded: "data-expanded",
+  },
+  icons: {
+    menu: "menu",
+    close: "close",
+    expandMore: "expand_more",
+    expandLess: "expand_less",
   },
 };
 
 export class NavigationMobile {
-  constructor() {
+  /**
+   *
+   * @param {Navigation} parent
+   */
+  constructor(parent) {
+    this.parent = parent;
     this.primaryMenu = document.querySelector("nav.navbar.primary");
     this.primaryMenuExpander = this.primaryMenu.querySelector("a.menu-expander");
 
-    this.primaryMenuExpander.addEventListener("click", event => this.onClick(event));
+    this.primaryMenuExpander.addEventListener("click", event => this.onExpanderClick(event));
 
     document
       .querySelectorAll("div.nav-wrapper.mobile ul.nav li.item ul.nav-descendants")
@@ -25,6 +40,25 @@ export class NavigationMobile {
 
         pageItem.addEventListener("click", event => this.onItemClick(pageItem, event));
       });
+  }
+
+  /**
+   *
+   * @param {Element} parent
+   * @param {object} icons
+   * @param {string} icons.expand
+   * @param {string} icons.collapse
+   * @param {string} selector
+   */
+  setExpanderIcon(
+    parent,
+    icons = { expand: opts.icons.menu, collapse: opts.icons.close },
+    selector = "i.icon"
+  ) {
+    const icon = parent.querySelector(selector);
+    icon.innerHTML = parent.hasAttribute(opts.attribute.expanded)
+      ? icons.collapse
+      : icons.expand;
   }
 
   setMenuExpanded() {
@@ -40,12 +74,20 @@ export class NavigationMobile {
     ).style.top = `${primaryMenuClientTop}px`;
 
     this.primaryMenu.classList.add("expanded");
-    this.primaryMenu.setAttribute("data-expanded", "true");
+    this.primaryMenu.setAttribute(opts.attribute.expanded, "true");
+
+    this.setExpanderIcon(this.primaryMenu);
   }
 
   setMenuCollapsed() {
     this.primaryMenu.classList.remove("expanded");
-    this.primaryMenu.removeAttribute("data-expanded");
+    this.primaryMenu.removeAttribute(opts.attribute.expanded);
+
+    this.setExpanderIcon(this.primaryMenu);
+
+    if (this.parent.state.expandedItem) {
+      this.setItemCollapsed(this.parent.state.expandedItem);
+    }
   }
 
   /**
@@ -53,8 +95,16 @@ export class NavigationMobile {
    * @param {Element} pageItem
    */
   setItemExpanded(pageItem) {
-    pageItem.setAttribute("data-expanded", "true");
+    pageItem.setAttribute(opts.attribute.expanded, "true");
     pageItem.classList.add("expanded");
+
+    this.setExpanderIcon(
+      pageItem,
+      { expand: opts.icons.expandMore, collapse: opts.icons.expandLess },
+      "a.link i.icon"
+    );
+
+    this.parent.state.expandedItem = pageItem;
   }
 
   /**
@@ -62,8 +112,16 @@ export class NavigationMobile {
    * @param {Element} pageItem
    */
   setItemCollapsed(pageItem) {
-    pageItem.removeAttribute("data-expanded", "false");
+    pageItem.removeAttribute(opts.attribute.expanded, "false");
     pageItem.classList.remove("expanded");
+
+    this.setExpanderIcon(
+      pageItem,
+      { expand: opts.icons.expandMore, collapse: opts.icons.expandLess },
+      "a.link i.icon"
+    );
+
+    this.parent.state.expandedItem = undefined;
   }
 
   /**
@@ -77,7 +135,7 @@ export class NavigationMobile {
 
     if (!descendantMenu) {
       // Om jag inte kan hitta någon ul.nav-descendants ovanför elementet, anta högsta nivån.
-      if (!pageItem.hasAttribute("data-expanded")) {
+      if (!pageItem.hasAttribute(opts.attribute.expanded)) {
         this.setItemExpanded(pageItem);
       } else {
         this.setItemCollapsed(pageItem);
@@ -90,8 +148,8 @@ export class NavigationMobile {
     }
   }
 
-  onClick(event) {
-    if (!this.primaryMenu.hasAttribute("data-expanded")) {
+  onExpanderClick(event) {
+    if (!this.primaryMenu.hasAttribute(opts.attribute.expanded)) {
       this.setMenuExpanded();
     } else {
       this.setMenuCollapsed();
@@ -106,16 +164,21 @@ export class Navigation {
   constructor() {
     this.animations = {};
     this.state = {
+      isMobile: false,
       expandedItem: undefined,
     };
-    this.mobile = new NavigationMobile();
+    this.menu = document.querySelector("nav.navbar.primary .nav-wrapper");
+    this.mobile = new NavigationMobile(this);
     gsap.registerPlugin(CSSPlugin);
 
     this._bindGlobalEvents();
     this._bindItemEvents();
+
+    this.setMenuForViewport();
   }
 
   _bindGlobalEvents() {
+    window.onresize = event => this.onWindowResize(event);
     document.addEventListener("keyup", event => this.onDocumentKeyUp(event));
   }
 
@@ -126,17 +189,23 @@ export class Navigation {
         const pageItem = e.closest("li.parent");
         this._bindItemClickEvents(pageItem);
 
-        pageItem.addEventListener("mouseover", event => this.onItemMouseOver(pageItem, event));
-        pageItem.addEventListener("mouseleave", event =>
-          this.onItemMouseLeave(pageItem, event)
+        pageItem.addEventListener(
+          "mouseover",
+          event => !this.state.isMobile && this.onItemMouseOver(pageItem, event)
         );
-        pageItem.addEventListener("focusin", event => this.onItemFocusIn(pageItem, event));
-        pageItem.addEventListener("focusout", event => this.onItemFocusOut(pageItem, event));
+        pageItem.addEventListener(
+          "mouseleave",
+          event => !this.state.isMobile && this.onItemMouseLeave(pageItem, event)
+        );
+        pageItem.addEventListener(
+          "focusin",
+          event => !this.state.isMobile && this.onItemFocusIn(pageItem, event)
+        );
+        pageItem.addEventListener(
+          "focusout",
+          event => !this.state.isMobile && this.onItemFocusOut(pageItem, event)
+        );
       });
-
-    document.addEventListener("keypress", event => {
-      console.log(event);
-    });
   }
 
   /**
@@ -150,9 +219,31 @@ export class Navigation {
     // pageItem.addEventListener("click", event => this.onClick(pageItem, event));
     pageItemLink.addEventListener(
       "click",
-      event => this.onItemLinkClick(pageItemLink, pageItem, event),
+      event =>
+        !this.state.isMobile
+          ? this.onItemLinkClick(pageItemLink, pageItem, event)
+          : this.mobile.onItemClick(pageItem, event),
       { capture: true, passive: false }
     );
+  }
+
+  /**
+   * Set menu-type depending on viewport.
+   */
+  setMenuForViewport() {
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+
+    if (vw < opts.viewPort.mobileWidth) {
+      this.state.isMobile = true;
+      if (!this.menu.classList.contains("mobile")) {
+        this.menu.classList.add("mobile");
+      }
+    } else {
+      this.state.isMobile = false;
+      if (this.menu.classList.contains("mobile")) {
+        this.menu.classList.remove("mobile");
+      }
+    }
   }
 
   /**
@@ -237,6 +328,14 @@ export class Navigation {
    */
   canCollapse(pageItem) {
     return pageItem.hasAttribute(opts.attribute.isPendingCollapse);
+  }
+
+  /**
+   *
+   * @param {UIEvent} event
+   */
+  onWindowResize(event) {
+    this.setMenuForViewport();
   }
 
   /**

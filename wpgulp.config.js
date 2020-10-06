@@ -24,6 +24,7 @@ module.exports = {
   // Global
   rootDestination: wordpressThemePath,
   rootDestinationCleanGlobs: [path.join(wordpressThemePath, "**", "*")],
+  manifest: manifest,
 
   // Template
   templateVariables: {

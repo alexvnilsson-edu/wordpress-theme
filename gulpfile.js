@@ -72,6 +72,7 @@ const plumber = require("gulp-plumber"); // Prevent pipe breaking caused by erro
 const beep = require("beepbeep");
 const template = require("gulp-template"); // Render/pre-compile Lodash templates.
 const shell = require("gulp-shell"); // Execute shell commands.
+const zip = require("gulp-zip"); // Zip files and/or folders.
 
 // Webpack utilities/plugins.
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -528,8 +529,15 @@ gulp.task("translate", () => {
     .pipe(gulp.dest(config.translationDestination + "/" + config.translationFile));
 });
 
+gulp.task("package-theme", function () {
+  return gulp
+    .src(`${config.rootDestination}/**/*`)
+    .pipe(zip(`${config.manifest.name}.zip`))
+    .pipe(gulp.dest("./dist"));
+});
+
 /**
- * `gulp-autoreload
+ * Task: `gulp-autoreload`
  */
 gulp.task("gulp-autoreload", function () {
   var p;

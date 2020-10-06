@@ -1,40 +1,91 @@
-$footer-menu-link-color: rgb(24, 24, 24);
+$footer-text-gray: rgb(75, 75, 75);
 
 body > div.footer {
-  margin-top: 6em;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
 
-  background-color: rgb(225, 225, 225);
+  margin-top: 3em;
+
+  border-top: 1px solid rgb(200, 200, 200);
+
+  font-size: 0.82em;
+  font-weight: 500;
   color: rgb(10, 10, 10);
 
-  .grid {
-    display: grid;
-    grid-template-columns: auto auto;
+  .field {
+    padding: 1em 0;
 
-    padding: 0;
+    &.copyright {
+      margin-right: auto;
+      color: $footer-text-gray;
+    }
 
-    .cell {
-      padding: 1em 2em;
+    &.separate {
+      margin: 0 2em;
+    }
 
-      .menu {
+    &.menu ul.nav {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      margin: 0 0 0 0;
+      padding: 0;
+      list-style: none;
+
+      .item {
+        &:not(:last-child) {
+          margin-right: 2.5em;
+        }
+
+        a {
+          // ...
+        }
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  body > div.footer {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    max-width: 95vw;
+    padding: 1em 0;
+
+    .field {
+      padding: 0;
+
+      &.copyright {
+        margin: 0;
+        color: $footer-text-gray;
+      }
+
+      &.separate {
+        margin: 1em 0 !important;
+      }
+
+      &.menu ul.nav {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
         margin: 0 0 0 0;
         padding: 0;
         list-style: none;
 
-        .menu-item {
-          a {
-            font-size: 0.90em;
-            font-weight: 500;
-            color: $footer-menu-link-color;
+        .item {
+          margin: 0;
+          padding: 0;
+          &:not(:last-child) {
+            margin-right: 0;
+            margin-bottom: 0.5em;
           }
         }
-      }
-
-      &.first {
-        grid-column: 1;
-      }
-
-      &.second {
-        grid-column: 2;
       }
     }
   }

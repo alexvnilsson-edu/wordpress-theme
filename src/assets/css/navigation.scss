@@ -176,6 +176,7 @@ $nav-page-item-normal-animation: 250ms;
     }
 
     a.menu-expander {
+      display: block;
       margin-left: auto;
 
       color: $nav-brand-link-color;
@@ -233,7 +234,7 @@ $nav-page-item-normal-animation: 250ms;
             transition: color 250ms ease-in-out;
 
             i.icon {
-              margin-left: auto;
+              margin-left: 0;
             }
           }
 

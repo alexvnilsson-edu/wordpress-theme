@@ -1,1 +1,8 @@
 $enable-rounded: false;
+
+// Länkar
+
+$link-color: hsl(211, 70%, 46%);
+$link-decoration: none;
+$link-hover-color: darken($link-color, 10%);
+$link-hover-decoration: underline;
